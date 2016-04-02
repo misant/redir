@@ -23,8 +23,12 @@ redirector_bypass off;url_rewrite_program /usr/pbi/squid-amd64/share/warn/redir.
 Redir takes requests from squid, if requested domain was remorary whitelisted tell squid to show page.
 If not gives request to SquidGuard. SquidGuard as usual determines if url request will be passed or blocked.
 If blocked and target category is Warning it will show Agree button.
-If Agree button pressed, sgwrite.php starts, writing url into user`s temp file. Temp files are deleted with cron`ed cleanup.sh
+If Agree button pressed, sgwrite.php starts, writing url into users temp file. Temp files are deleted with CRONed cleanup.sh
 Sgwrite.php redirects request to URL+&w, its needed because if URL will be not changed it will return cached by browser block page sgerror.php
+
+# Known issues
+
+Fills /var/squid/logs/cache.log with garbage. 
 
 # TODO
 1. Remove squid cache.log spamming
