@@ -1,5 +1,6 @@
 # redir
 Custom URL rewrite program for squid with squidGuard, allowing to show warning page and pass if user insists.
+Squid Redirector For Warning Only. 
 Created for pfSense 2.2.6 but can be modified for any other installation. Tested with transparent mode.
 
 I am not a programmer, so it full of dirty hacks and dirty methods. But it works.
@@ -34,6 +35,7 @@ Fills /var/squid/logs/cache.log with garbage.
 1. Remove squid cache.log spamming
 2. Replace python os.popen with subprocess
 3. Installation script? Not sure if needed
+4. Describe prerequisites.
 
 # Inspired by
 That script was taken as starting point
