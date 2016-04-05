@@ -220,28 +220,45 @@ function get_error_page($er_code_id, $err_msg='') {
         $str[] = '<body style="background-color:#FFFFFF; font-family:verdana, arial, sans serif;">';
       $str[] = '<div style="width:70%; margin:20px auto;">';
       $str[] = '<div style="padding:5px; background-color:#C0C0C0; text-align:right; font-weight:bold; font-family:verdana,arial,sans serif; color:#000000; font-size:60%;">';
-                if ($cl['n'])        $str[] = "Client Name: {$cl['n']} | ";
-                if ($cl['a'])        $str[] = "Client IP: {$cl['a']} | ";
-                if ($cl['i'])        $str[] = "Client User: {$cl['i']} | ";
-                if ($cl['s'])        $str[] = "Group: {$cl['s']} | ";
-                if ($cl['t'])        $str[] = "Category: {$cl['t']} ";
+#                if ($cl['n'])        $str[] = "Client Name: {$cl['n']} | ";
+#                if ($cl['a'])        $str[] = "Client IP: {$cl['a']} | ";
+#                if ($cl['i'])        $str[] = "Client User: {$cl['i']} | ";
+#                if ($cl['s'])        $str[] = "Group: {$cl['s']} | ";
+#                if ($cl['t'])        $str[] = "Category: {$cl['t']} ";
       $str[] = '</div><div style="background-color:#F4F4F4; text-align:center; padding:20px;">';
 
-    $str[] = '<div style="padding:5px; background-color:#007edf; text-align:center; color:#FFFFFF; font-size:200%; font-weight: bold;">Access is not allowed</div>';
+    $str[] = '<div style="padding:5px; background-color:#007edf; text-align:center; color:#FFFFFF; font-size:200%; font-weight: bold;">Warning</div>';
     $str[] = '<div style="padding:20px; margin-top:20px; background-color:#E2E2E2; text-align:center; color:#000000; font-family:verdana, arial, sans serif; font-size:80%;">';
-    if ($err_msg) $str[] = '<p style="font-weight:bold; font-size:350%;">! '. $err_msg.' !</p>';
-    if ($cl['u'])        $str[] = "<p>URL: {$cl['u']}</p>";
-    $str[] = '<p>If you think that was done by mistake please contact <a href="mailto:some@mail.com">some@mail.com</a></p>';
-    if ($cl['t'] == 'Warning') 
+
+# parsing redirect message
+# format of message with "::" delimiter:
+# text of message::alternative link::contact e-mail
+    $err_msg = explode("::", $err_msg);
+
+    $sh_msg = $err_msg[0];
+    $sh_link = $err_msg[1];
+    $sh_email = $err_msg[2];
+
+# output message is set
+    if ($err_msg) $str[] = '<p style="font-weight:bold; font-size:150%;"> '. $err_msg[0].' </p>';
+
+
+# Check if url is blocked and its just warning
+    if (strpos($cl['t'], "Warning") !== false) 
 	{
 	$str[] = "<p>Are you sure you want to continue to {$cl['u']}?</p>";
-
-	$str[] = "<form action=sgwrite.php method=post><input type ='submit' value='I AGREE'><input type=hidden name=w_url value={$cl['u']}><input type=hidden name=w_ip value={$cl['a']}><input type='button' value='CANCEL' onClick='history.go(-1)'></from>";
+	$str[] = "<form action=sgwrite.php method=post><input type ='submit' value='CONTINUE'><input type=hidden name=w_url value={$cl['u']}><input type=hidden name=w_ip value={$cl['a']}><input type='button' value='CANCEL' onClick='history.go(-1)'></from>";
 	}
-     $str[] = '<p><img style="padding-top:20px;display: block;margin: 0px auto"</p></div></div>';
-        $str[] = '<div style="padding:5px; background-color:#C0C0C0; text-align:right; color:#FFFFFF; font-size:60%; font-family:verdana,arial,sans serif;">Web Filtering</div></div>';
-        $str[] = "</body>";
-        $str[] = "</html>";
+# output alternative link if set
+    if ($sh_link) $str[] = '<p>Alternative website: <a href="'. $err_msg[1].'">'. $err_msg[1]. '</a></p>';
+    $str[] = '<p><img style="padding-top:20px;display: block;margin: 0px auto"</p></div></div>';
+
+# output contact e-mail if set
+    if ($sh_email) $str[] = '<div style="padding:5px; background-color:#C0C0C0; text-align:right; color:#FFFFFF; font-size:60%; font-family:verdana,arial,sans serif;">If you think that was done by mistake please contact <a href="mailto:'. $err_msg[2].'">'. $err_msg[2].'</a></div></div>';
+    else $str[] = '<div style="padding:5px; background-color:#C0C0C0; text-align:right; color:#FFFFFF; font-size:60%; font-family:verdana,arial,sans serif;">Web Filtering</div></div>';
+
+    $str[] = "</body>";
+    $str[] = "</html>";
 
 
 
